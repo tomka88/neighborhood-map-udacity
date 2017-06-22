@@ -1,0 +1,30 @@
+{
+  "name": "ud_neighborhood-map",
+  "description": "udacity project 5",
+  "main": "app.js",
+  "authors": [
+    "Tamas Kocsis <kocsis.tamas88@gmail.com>"
+  ],
+  "license": "MIT",
+  "keywords": [
+    "knockout",
+    "google",
+    "api",
+    "foursquare",
+    "udacity"
+  ],
+  "homepage": "https://github.com/tomka88/ud_neighborhood-map",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "jquery": "^3.2.1",
+    "knockout": "^3.4.2",
+    "bootstrap": "^3.3.7"
+  }
+}

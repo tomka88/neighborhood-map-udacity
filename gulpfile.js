@@ -1,5 +1,6 @@
 var gulp = require('gulp'),
     sass = require('gulp-sass'),
+    jshint = require('gulp-jshint'),
     browserSync = require('browser-sync').create();
 
 gulp.task('sass', function(){
@@ -17,10 +18,19 @@ gulp.task('browserSync', function() {
       baseDir: 'app'
     },
   })
-})
+});
 
-gulp.task('watch', ['browserSync', 'sass'], function(){
-  gulp.watch('app/scss/**/*.scss', ['sass']); 
+gulp.task('jshint', function() {
+    return gulp.src('app/js/*.js')
+        .pipe(jshint())
+        .pipe(jshint.reporter('default'));
+});
+
+
+
+gulp.task('watch', ['browserSync', 'sass', 'jshint'], function(){
+  gulp.watch('app/scss/**/*.scss', ['sass']);
+  gulp.watch('js/*.js', ['jshint', 'scripts']); 
   // Other watchers
 })
 
