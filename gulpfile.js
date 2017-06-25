@@ -1,6 +1,10 @@
 var gulp = require('gulp'),
     sass = require('gulp-sass'),
     jshint = require('gulp-jshint'),
+    concat = require('gulp-concat'),
+    uglify = require('gulp-uglify'),
+    plugins = require('gulp-load-plugins')
+    rename = require('gulp-rename'),
     browserSync = require('browser-sync').create();
 
 gulp.task('sass', function(){
@@ -26,6 +30,9 @@ gulp.task('jshint', function() {
         .pipe(jshint.reporter('default'));
 });
 
+gulp.task('scripts', function(){
+  return gulp.src()
+})
 
 
 gulp.task('watch', ['browserSync', 'sass', 'jshint'], function(){
@@ -33,29 +40,3 @@ gulp.task('watch', ['browserSync', 'sass', 'jshint'], function(){
   gulp.watch('js/*.js', ['jshint', 'scripts']); 
   // Other watchers
 })
-
-
-	// bsConfig = require("gulp-bootstrap-configurator"),
- // 	minifyCSS = require('gulp-minify-css'),
- //    minifyhtml = require('gulp-minify-html'),
- //    responsive = require('gulp-responsive'),
-
-// For CSS 
-// gulp.task('make-bootstrap-css', function(){
-//   return gulp.src("./config.json")
-//     .pipe(bsConfig.css({
-//     	compress: true
-//     }))
-//     .pipe(gulp.dest("./assets"));
-//     // It will create `bootstrap.css` in directory `assets`. 
-// });
- 
-// // For JS 
-// gulp.task('make-bootstrap-js', function(){
-//   return gulp.src("./config.json")
-//     .pipe(bsConfig.js({
-//     	compress: true
-//     }))
-//     .pipe(gulp.dest("./assets"));
-//     // It will create `bootstrap.js` in directory `assets`. 
-// });
