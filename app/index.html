@@ -11,7 +11,7 @@
 		<div class="container-fluid">
 			<div class="page-header">
 			  <h1>Welcome to the Berlin Burger Guide</h1>
-			  <h4> we collect the best burger placesin the city</h4>
+			  <h4> we collect the best burger places in the city</h4>
 			</div>
 			<div class="row">
 				<div class="col-xs-12 col-md-12 search">
@@ -26,30 +26,16 @@
 
 			<div class="row">
 				<div class="col-xs-12 col-md-3 place-list">
-					<p>Places</p>
+					<ul data-bind="foreach: placeList">
+						<li data-bind="text: title"></li>
+					</ul>
 				</div>
 				<div class="col-xs-12 col-md-9" id="map">
 				</div>
 			</div>
 		</div>
 
-		<script type="text/javascript">
-			function initMap() {
-		    	var uluru = {lat: -25.363, lng: 131.044};
-		    	var map = new google.maps.Map(document.getElementById('map'), {
-		          zoom: 4,
-		          center: uluru
-		        });
-		        var marker = new google.maps.Marker({
-		          position: uluru,
-		          map: map
-		        });
-      		}
-		</script>
-		<script type="text/javascript" src="js/app.js"></script>
-		<script type="text/javascript" src="bower_components/jquery/dist/jquery.js"></script>
-		<script type="text/javascript" src="bower_components/knockout/dist/knockout.js"></script>
-		<script type="text/javascript" src="bower_components/bootstrap/dist/js/bootstrap.js"></script>
+		<script type="text/javascript" src="../dist/all.min.js"></script>
 	    <script async defer
 	    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBLYsLaLxxrEzTjE5FgEdmKp-xXQJ7Cvnk&callback=initMap">
 	    </script>

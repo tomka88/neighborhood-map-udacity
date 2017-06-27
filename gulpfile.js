@@ -3,25 +3,26 @@ var gulp = require('gulp'),
     jshint = require('gulp-jshint'),
     concat = require('gulp-concat'),
     uglify = require('gulp-uglify'),
-    plugins = require('gulp-load-plugins')
-    rename = require('gulp-rename'),
-    browserSync = require('browser-sync').create();
+    plugins = require('gulp-load-plugins'),
+    rename = require('gulp-rename');
+    
+var mainBowerFiles = require('main-bower-files');
 
 gulp.task('sass', function(){
   return gulp.src('app/scss/**/*.scss')
     .pipe(sass()) // Converts Sass to CSS with gulp-sass
     .pipe(gulp.dest('app/css'))
-    .pipe(browserSync.reload({
-        stream: true
-    }))
 });
 
-gulp.task('browserSync', function() {
-  browserSync.init({
-    server: {
-      baseDir: 'app'
-    },
-  })
+//concatenate & minify JS
+
+gulp.task('scripts', function() {
+  return gulp.src('app/js/*.js')
+    .pipe(concat('all.js'))
+    .pipe(gulp.dest('dist'))
+    .pipe(rename('all.min.js'))
+    .pipe(uglify())
+    .pipe(gulp.dest('dist'));
 });
 
 gulp.task('jshint', function() {
@@ -30,13 +31,11 @@ gulp.task('jshint', function() {
         .pipe(jshint.reporter('default'));
 });
 
-gulp.task('scripts', function(){
-  return gulp.src()
-})
 
-
-gulp.task('watch', ['browserSync', 'sass', 'jshint'], function(){
+gulp.task('watch', ['scripts', 'sass', 'jshint'], function(){
   gulp.watch('app/scss/**/*.scss', ['sass']);
-  gulp.watch('js/*.js', ['jshint', 'scripts']); 
+  gulp.watch('app/js/*.js', ['jshint', 'scripts']); 
   // Other watchers
 })
+
+gulp.task('default', ['scripts', 'jshint', 'sass'])
