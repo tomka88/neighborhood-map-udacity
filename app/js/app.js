@@ -64,19 +64,20 @@ var Place = function(data) {
 	this.lat = ko.observable(data.lat);
 	this.lng = ko.observable(data.lng);
 
+
+// creates lat-long variable for google maps markers
 	this.location = ko.computed(function(){
 		return "{lat:" + this.lat() + ", lng: " + this.lng() + "}";
 	},this);
 
-// // creates foursquare link with ko.computed
-// 	this.fsqLink = ko.computed(function(){
-// 		var link = this.
-// 	})
+// creates foursquare link with ko.computed
+	this.fsqLink = ko.computed(function(){
+		return "https://api.foursquare.com/v2/venues/search?ll=" + this.lat() + "," + this.lng() + "&client_id=4AU4CIDPEJFBQS3JXUTI20Q13I3NZWZPLR0Y3Y3OOOVCKLJ0&client_secret=NRQQY34A5SDFONZYEKKU5GWVZ1LFMR4MVMVQSLCGOIEPAKT2&v=20170702";
+	}, this);
 
-// // a location and a marker with lat-long variables and callingt the google maps API
+// a location and a marker with lat-long variables and callingt the google maps API
 // 	this.marker = ko.computed
 
-// 	this.marker = ko.computed
 // }
 
 };
