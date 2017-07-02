@@ -28,7 +28,12 @@
 				<div class="col-xs-12 col-md-3 place-list">
 					<ul data-bind="foreach: placeList">
 						<li data-bind="text: name"></li>
+						<li data-bind="text: location"></li>
 					</ul>
+
+					<button type="button" class="btn btn-success" data-bind: "click: showMarkers">Show Places</button>
+					<button type="button" class="btn btn-warning" data-bind: "hidePlaces">Hide Places</button>
+
 				</div>
 				<div class="col-xs-12 col-md-9" id="map">
 				</div>

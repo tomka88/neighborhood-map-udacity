@@ -64,6 +64,10 @@ var Place = function(data) {
 	this.lat = ko.observable(data.lat);
 	this.lng = ko.observable(data.lng);
 
+	this.location = ko.computed(function(){
+		return "{lat:" + this.lat() + ", lng: " + this.lng() + "}";
+	},this);
+
 // // creates foursquare link with ko.computed
 // 	this.fsqLink = ko.computed(function(){
 // 		var link = this.
@@ -83,25 +87,30 @@ var ViewModel = function() {
 	var self = this;
 
 	this.placeList = ko.observableArray([]);
+	this.markers = ko.observableArray([]);
 
+	
+// shows places as a list next to the map
 	burgerPlaces.forEach(function(placeItem){
 		self.placeList.push( new Place(placeItem) );
 	});
 
 	this.currentPlace = ko.observable( this.placeList()[0] );
 
+// listens to button press and creates markers for each place on the map
+
 	function initMap() {
-	var berlin = {lat: 52.5200, lng: 13.4050};
-	var map;	
-	map = new google.maps.Map(document.getElementById('map'), {
-      zoom: 12,
-      center: berlin
-    });
-
-
+		var berlin = {lat: 52.5200, lng: 13.4050};
+		var map;	
+		map = new google.maps.Map(document.getElementById('map'), {
+	      zoom: 12,
+	      center: berlin
+	    });
 	}
 	
 	initMap();
+
+
 }
 
 function callback() {
