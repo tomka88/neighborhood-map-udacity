@@ -76,7 +76,9 @@ var ViewModel = function() {
 	self.placeList = [];
 	burgerPlaces.forEach(function(place) {
 		self.placeList.push(new Place(place));
-	}) 
+	});
+
+	var infoWindow = new google.maps.InfoWindow();
 
 	self.placeList.forEach(function(place) {
 		var markerOptions = {
@@ -87,6 +89,18 @@ var ViewModel = function() {
 		};
 
 		place.marker = new google.maps.Marker(markerOptions);
+
+		// //click listener
+
+		google.maps.event.addListener(place.marker, 'click', function(){
+			toggleBounce();
+			setTimeout(toggleBounce, 400);
+			setTimeout(function(){
+				infowindow.setContent('<h3>' + place.name + '</h3>');
+				infowindow.open(map, place.marker);
+			}, 300);
+			map.panTo(place.marker.position);
+		});
 	});
 
 	self.visiblePlaces = ko.observableArray();
@@ -95,6 +109,16 @@ var ViewModel = function() {
 		self.visiblePlaces.push(place);
 	});
 
+	// self.populateInfoWindow = function(markerOptions, infowindow) {
+	// 	if (infowindow.markerOptions != markerOptions) {
+	// 		infowindow.markerOptions = markerOptions;
+	// 		infowindow.setContent = ('<div>' + markerOptions.title + '</div>');
+	// 		infowindow.open(map, markerOptions);
+
+	// 		infowindow.addListener('closeclick', function(){
+	// 			infowindow.setMarker = null;
+	// 		});
+	// 	}
 
 //records the user input and passes it over to KO
 	self.userInput = ko.observable('');
