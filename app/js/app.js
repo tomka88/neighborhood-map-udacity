@@ -61,6 +61,17 @@ var Place = function(data) {
 		return "https://api.foursquare.com/v2/venues/search?ll=" + this.lat() + "," + this.lng() + "&client_id=4AU4CIDPEJFBQS3JXUTI20Q13I3NZWZPLR0Y3Y3OOOVCKLJ0&client_secret=NRQQY34A5SDFONZYEKKU5GWVZ1LFMR4MVMVQSLCGOIEPAKT2&v=20170702";
 	}, this);
 
+	this.makeContent = ko.computed(function(){
+		var html = '<div id="info-window-container" style="display:none;">' + 
+						'<div id="info-content" data-bind="if:selectedPlace">'
+						+ 'blah blah' +
+						'</div>' +
+					'</div>';
+		html = $.parseHTML(html)[0];
+		return html;
+	});
+
+
 };
 
 var ViewModel = function() {
@@ -78,28 +89,30 @@ var ViewModel = function() {
 		self.placeList.push(new Place(place));
 	});
 
-	var infoWindow = new google.maps.InfoWindow();
-
 	self.placeList.forEach(function(place) {
 		var markerOptions = {
 			map: self.map,
 			position: new google.maps.LatLng(place.lat(), place.lng()),
 			animation: google.maps.Animation.DROP,
-			title: place.name()
+			title: place.name(),
 		};
+
+		// var infoWindow = new google.maps.InfoWindow({
+		// 	content: place.makeContent()
+		// });
 
 		place.marker = new google.maps.Marker(markerOptions);
 
-		// //click listener
+		place.marker['infoWindow'] = new google.maps.InfoWindow({
+			content: place.makeContent()
+		});
+
+
+		//click listener
 
 		google.maps.event.addListener(place.marker, 'click', function(){
-			toggleBounce();
-			setTimeout(toggleBounce, 400);
-			setTimeout(function(){
-				infowindow.setContent('<h3>' + place.name + '</h3>');
-				infowindow.open(map, place.marker);
-			}, 300);
-			map.panTo(place.marker.position);
+				// infoWindow.setContent(place.content);
+				this['infoWindow'].open(map, place.marker);
 		});
 	});
 
