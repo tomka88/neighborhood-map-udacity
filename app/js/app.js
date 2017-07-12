@@ -61,16 +61,6 @@ var Place = function(data) {
 		return "https://api.foursquare.com/v2/venues/search?ll=" + this.lat() + "," + this.lng() + "&client_id=4AU4CIDPEJFBQS3JXUTI20Q13I3NZWZPLR0Y3Y3OOOVCKLJ0&client_secret=NRQQY34A5SDFONZYEKKU5GWVZ1LFMR4MVMVQSLCGOIEPAKT2&v=20170702";
 	}, this);
 
-	// this.makeContent = ko.computed(function(){
-	// 	var html = '<div id="info-window-container" style="display:none;">' + 
-	// 					'<div id="info-content" data-bind="if:selectedPlace">'
-	// 					+ 'blah blah' +
-	// 					'</div>' +
-	// 				'</div>';
-	// 	html = $.parseHTML(html)[0];
-	// 	return html;
-	// });
-
 
 };
 
@@ -101,13 +91,28 @@ var ViewModel = function() {
 
 		place.marker = new google.maps.Marker(markerOptions);
 
-		var infoWindow = new google.maps.InfoWindow();
+		function toggleBounce() {
+			if(place.marker.getAnimation() !== null) {
+				place.marker.setAnimation(null);
+			} else {
+				place.marker.setAnimation(google.maps.Animation.BOUNCE);
+			}
+		}
+
+		var infoWindow = new google.maps.InfoWindow({
+			maxWidth: 350,
+			content: '<h4>' + place.name() + '</h4><br><a href="' + place.fsqLink + '">Link to Foursquare</a>'
+		});
 
 		//click listener
 
 		google.maps.event.addListener(place.marker, 'click', function(){
-			infoWindow.setContent('<h3>' + place.name() + '</h3>');
-			infoWindow.open(map, place.marker);
+			toggleBounce();
+			setTimeout(toggleBounce, 150);
+			setTimeout(function() {
+				infoWindow.open(map, place.marker);
+			}, 300);
+				
 		});
 	});
 
@@ -139,7 +144,7 @@ var ViewModel = function() {
 		});
 	};
 
-	self.show_info = function(place){
+	self.showInfoWindow = function(place){
 		google.maps.event.trigger(place.marker, 'click');
 	};
 
