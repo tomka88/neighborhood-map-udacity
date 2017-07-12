@@ -61,15 +61,15 @@ var Place = function(data) {
 		return "https://api.foursquare.com/v2/venues/search?ll=" + this.lat() + "," + this.lng() + "&client_id=4AU4CIDPEJFBQS3JXUTI20Q13I3NZWZPLR0Y3Y3OOOVCKLJ0&client_secret=NRQQY34A5SDFONZYEKKU5GWVZ1LFMR4MVMVQSLCGOIEPAKT2&v=20170702";
 	}, this);
 
-	this.makeContent = ko.computed(function(){
-		var html = '<div id="info-window-container" style="display:none;">' + 
-						'<div id="info-content" data-bind="if:selectedPlace">'
-						+ 'blah blah' +
-						'</div>' +
-					'</div>';
-		html = $.parseHTML(html)[0];
-		return html;
-	});
+	// this.makeContent = ko.computed(function(){
+	// 	var html = '<div id="info-window-container" style="display:none;">' + 
+	// 					'<div id="info-content" data-bind="if:selectedPlace">'
+	// 					+ 'blah blah' +
+	// 					'</div>' +
+	// 				'</div>';
+	// 	html = $.parseHTML(html)[0];
+	// 	return html;
+	// });
 
 
 };
@@ -89,30 +89,25 @@ var ViewModel = function() {
 		self.placeList.push(new Place(place));
 	});
 
+	
+
 	self.placeList.forEach(function(place) {
 		var markerOptions = {
 			map: self.map,
 			position: new google.maps.LatLng(place.lat(), place.lng()),
 			animation: google.maps.Animation.DROP,
-			title: place.name(),
+			title: place.name()
 		};
-
-		// var infoWindow = new google.maps.InfoWindow({
-		// 	content: place.makeContent()
-		// });
 
 		place.marker = new google.maps.Marker(markerOptions);
 
-		place.marker['infoWindow'] = new google.maps.InfoWindow({
-			content: place.makeContent()
-		});
-
+		var infoWindow = new google.maps.InfoWindow();
 
 		//click listener
 
 		google.maps.event.addListener(place.marker, 'click', function(){
-				// infoWindow.setContent(place.content);
-				this['infoWindow'].open(map, place.marker);
+			infoWindow.setContent('<h3>' + place.name() + '</h3>');
+			infoWindow.open(map, place.marker);
 		});
 	});
 
@@ -122,16 +117,6 @@ var ViewModel = function() {
 		self.visiblePlaces.push(place);
 	});
 
-	// self.populateInfoWindow = function(markerOptions, infowindow) {
-	// 	if (infowindow.markerOptions != markerOptions) {
-	// 		infowindow.markerOptions = markerOptions;
-	// 		infowindow.setContent = ('<div>' + markerOptions.title + '</div>');
-	// 		infowindow.open(map, markerOptions);
-
-	// 		infowindow.addListener('closeclick', function(){
-	// 			infowindow.setMarker = null;
-	// 		});
-	// 	}
 
 //records the user input and passes it over to KO
 	self.userInput = ko.observable('');
@@ -154,84 +139,15 @@ var ViewModel = function() {
 		});
 	};
 
+	self.show_info = function(place){
+		google.maps.event.trigger(place.marker, 'click');
+	};
+
 }
 
 function callback() {
 	ko.applyBindings(new ViewModel());	
 }
-
-
-// var ViewModel = function() {
-// 	var self = this;
-
-// 	this.placeList = ko.observableArray([]);
-// 	this.markers = ko.observableArray([]);
-
-	
-// // shows places as a list next to the map
-// 	burgerPlaces.forEach(function(placeItem){
-// 		self.placeList.push( new Place(placeItem) );
-// 	});
-
-// 	this.currentPlace = ko.observable( this.placeList()[0] );
-
-// 	var infoWindow = new google.maps.InfoWindow();
-
-// 	var marker;
-
-// // listens to button press and creates markers for each place on the map
-
-// 	self.placeList().forEach(function(placeItem){
-// 		marker = new google.maps.Marker({
-// 			position: new google.maps.LatLng(placeItem.lat(), placeItem.lng()),
-// 			setMap: map,
-// 			animation: google.maps.Animation.DROP,
-// 			title: placeItem.name()
-// 		});
-
-// 		placeItem.marker = marker;
-
-// 		function toggleBounce() {
-// 		  if (marker.getAnimation() !== null) {
-// 		    marker.setAnimation(null);
-// 		  } else {
-// 		    marker.setAnimation(google.maps.Animation.BOUNCE);
-// 		  }
-// 		}
-
-// 		google.maps.event.addListener(placeItem.marker, 'click', function(){
-// 			toggleBounce();
-// 			setTimeout(toggleBounce, 600);
-// 			setTimeout(function(){
-// 				infowindow.setContent('<h3>' + placeItem.name + '</h3>');
-// 				infowindow.open(map, placeItem.marker);
-// 			}, 200);
-// 			map.panTo(placeItem.marker.position);
-// 		});
-
-// 	});
-
-// 	self.show_info = function(placeItem){
-// 		google.maps.event.trigger(placeItem.marker,'click');
-// 	};
-
-// 	function initMap() {
-// 		var berlin = {lat: 52.5200, lng: 13.4050};
-// 		var map;	
-// 		map = new google.maps.Map(document.getElementById('map'), {
-// 	      zoom: 12,
-// 	      center: berlin
-// 	    });
-// 	}
-	
-// 	initMap();
-
-// }
-
-// function callback() {
-// 	ko.applyBindings(new ViewModel());	
-// }
-
 
 
 
