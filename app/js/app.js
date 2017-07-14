@@ -134,7 +134,7 @@ var ViewModel = function() {
 		self.placeList.forEach(function(place) {
 			place.marker.setVisible(false);
 
-			if (place.name.toLowerCase().indexOf(searchInput) !== -1) {
+			if (place.name().toLowerCase().indexOf(searchInput) !== -1) {
 				self.visiblePlaces.push(place);
 			}
 		});
