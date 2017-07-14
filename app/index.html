@@ -18,7 +18,7 @@
 					<div class="input-group">
 					  <input type="text" class="form-control" placeholder="Search for..." data-bind="textInput: userInput, event: {keyup: filterMarkers}">
 					  <span class="input-group-btn">
-					    <button class="btn btn-default" type="button">Go!</button>
+					    <button class="btn btn-default" type="button" data-bind="click: filterMarkers">Go!</button>
 					  </span>
 					</div><!-- /input-group -->
 				</div><!-- /.col-lg-6 -->
@@ -30,8 +30,8 @@
 						<li data-bind="text: name, click: $parent.showInfoWindow"></li>
 					</ul>
 
-					<button type="button" class="btn btn-success" data-bind: "click: showMarkers">Show Places</button>
-					<button type="button" class="btn btn-warning" data-bind: "hidePlaces">Hide Places</button>
+					<!-- <button type="button" class="btn btn-success" data-bind: "click: showMarkers">Show Places</button>
+					<button type="button" class="btn btn-warning" data-bind: "click: hideMarkers">Hide Places</button> -->
 
 				</div>
 				<div class="col-xs-12 col-md-9" id="map">

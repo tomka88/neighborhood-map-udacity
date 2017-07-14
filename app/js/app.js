@@ -50,6 +50,10 @@ var Place = function(data) {
 	this.lat = ko.observable(data.lat);
 	this.lng = ko.observable(data.lng);
 	this.markers = ko.observableArray([]);
+	this.rating = ko.observable();
+	this.street = ko.observable;
+	this.url = ko.observable();
+	this.checkinCount = ko.observable();
 
 // creates lat-long variable for google maps markers
 	this.latLng = ko.computed(function(){
@@ -58,7 +62,7 @@ var Place = function(data) {
 
 // creates foursquare link with ko.computed
 	this.fsqLink = ko.computed(function(){
-		return "https://api.foursquare.com/v2/venues/search?ll=" + this.lat() + "," + this.lng() + "&client_id=4AU4CIDPEJFBQS3JXUTI20Q13I3NZWZPLR0Y3Y3OOOVCKLJ0&client_secret=NRQQY34A5SDFONZYEKKU5GWVZ1LFMR4MVMVQSLCGOIEPAKT2&v=20170702";
+		return 'https://api.foursquare.com/v2/venues/search?ll=' + this.lat() + ',' + this.lng() + '&intent=match&query=' + this.name() + '&client_id=4AU4CIDPEJFBQS3JXUTI20Q13I3NZWZPLR0Y3Y3OOOVCKLJ0&client_secret=NRQQY34A5SDFONZYEKKU5GWVZ1LFMR4MVMVQSLCGOIEPAKT2&v=20170702';
 	}, this);
 
 
@@ -68,19 +72,22 @@ var ViewModel = function() {
 	var self = this;
 
 	
-	// initiates google map
+// initiates google map
 	self.map = new google.maps.Map(document.getElementById('map'), {
 		center: {lat: 52.5200, lng: 13.4050},
 	    zoom: 12
 	});
 
+// loops through the all places on the list
 	self.placeList = [];
 	burgerPlaces.forEach(function(place) {
 		self.placeList.push(new Place(place));
 	});
 
-	
 
+// loops through all places, defines the marker position based on the lat-long coordinates
+// and populates the info window for each marker
+	
 	self.placeList.forEach(function(place) {
 		var markerOptions = {
 			map: self.map,
@@ -90,6 +97,17 @@ var ViewModel = function() {
 		};
 
 		place.marker = new google.maps.Marker(markerOptions);
+
+		var results, name, url, rating, checkinCount, street;
+
+		$.getJSON(place.fsqLink(), function(data){
+			results = data.response.groups[0].items[0].venue;
+			place.name = results.name;
+			place.url = results.url;
+			place.rating = results.rating;
+			place.checkinCount = results.checkinCount;
+			place.street = results.location.formattedAddress[0];
+		});
 
 		function toggleBounce() {
 			if(place.marker.getAnimation() !== null) {
@@ -101,10 +119,10 @@ var ViewModel = function() {
 
 		var infoWindow = new google.maps.InfoWindow({
 			maxWidth: 350,
-			content: '<h4>' + place.name() + '</h4><br><a href="' + place.fsqLink + '">Link to Foursquare</a>'
+			content: '<h4>' + place.name() + '</h4><br><a href="' + place.url + '">Link to Foursquare</a>'
 		});
 
-		//click listener
+// adds click listener to the markers
 
 		google.maps.event.addListener(place.marker, 'click', function(){
 			toggleBounce();
@@ -122,8 +140,9 @@ var ViewModel = function() {
 		self.visiblePlaces.push(place);
 	});
 
-
-//records the user input and passes it over to KO
+// records the user input and passes it over to KO
+// and decides which markers are visible based on user input
+	
 	self.userInput = ko.observable('');
 
 	self.filterMarkers = function() {
@@ -147,6 +166,8 @@ var ViewModel = function() {
 	self.showInfoWindow = function(place){
 		google.maps.event.trigger(place.marker, 'click');
 	};
+
+
 
 }
 
