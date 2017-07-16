@@ -102,13 +102,6 @@ var ViewModel = function() {
 
 		var url, checkinCount, address;
 
-		$.getJSON(fsqURL, function(data){
-			var results = data.response.venues[0];
-			place.url = results.url;
-			// place.checkinCount = results.stats.checkinCount;
-			place.address = results.location.address;
-		});
-
 		function bounce() {
 			if(place.marker.getAnimation() !== null) {
 				place.marker.setAnimation(null);
