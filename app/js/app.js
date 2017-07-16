@@ -50,10 +50,10 @@ var Place = function(data) {
 	this.lat = ko.observable(data.lat);
 	this.lng = ko.observable(data.lng);
 	this.markers = ko.observableArray([]);
-	this.address = ko.observable();
-	this.street = ko.observable();
-	this.url = ko.observable();
-	this.checkinCount = ko.observable();
+	this.address = ko.observable('');
+	this.street = ko.observable('');
+	this.url = ko.observable('');
+	this.checkinCount = ko.observable('');
 
 // creates lat-long variable for google maps markers
 	this.latLng = ko.computed(function(){
@@ -98,9 +98,25 @@ var ViewModel = function() {
 
 		place.marker = new google.maps.Marker(markerOptions);
 
-		var fsqURL = place.fsqLink();
+		function callFsq(place) {
+			var client_secret = 'NRQQY34A5SDFONZYEKKU5GWVZ1LFMR4MVMVQSLCGOIEPAKT2';
+			var client_id = '4AU4CIDPEJFBQS3JXUTI20Q13I3NZWZPLR0Y3Y3OOOVCKLJ0';
+			var version = '20170702';
 
-		var url, checkinCount, address;
+			var fsURL = 'https://api.foursquare.com/v2/venues/search?ll=' + place.lat() + ',' + place.lng() + '&intent=match&query=' + place.name() + '&client_id=' + client_id + '&client_secret=' + client_secret + '&v=' + version;
+
+			fetch(fsURL).then(function(response) {
+				if (response.status !== 200) {
+					alert('Houston we have a problem');
+					return;
+				}
+
+				response.json().then(function(place)) {
+
+				}
+			})
+
+		}
 
 		function bounce() {
 			if(place.marker.getAnimation() !== null) {
