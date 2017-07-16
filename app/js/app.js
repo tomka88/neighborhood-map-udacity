@@ -50,8 +50,8 @@ var Place = function(data) {
 	this.lat = ko.observable(data.lat);
 	this.lng = ko.observable(data.lng);
 	this.markers = ko.observableArray([]);
-	this.rating = ko.observable();
-	this.street = ko.observable;
+	this.address = ko.observable();
+	this.street = ko.observable();
 	this.url = ko.observable();
 	this.checkinCount = ko.observable();
 
@@ -98,15 +98,15 @@ var ViewModel = function() {
 
 		place.marker = new google.maps.Marker(markerOptions);
 
-		var results, name, url, rating, checkinCount, street;
+		var fsqURL = place.fsqLink();
 
-		$.getJSON(place.fsqLink(), function(data){
-			results = data.response.groups[0].items[0].venue;
-			place.name = results.name;
+		var url, checkinCount, address;
+
+		$.getJSON(fsqURL, function(data){
+			var results = data.response.venues;
 			place.url = results.url;
-			place.rating = results.rating;
-			place.checkinCount = results.checkinCount;
-			place.street = results.location.formattedAddress[0];
+			// place.checkinCount = results.stats.checkinCount;
+			place.address = results.location.address;
 		});
 
 		function toggleBounce() {
@@ -119,7 +119,7 @@ var ViewModel = function() {
 
 		var infoWindow = new google.maps.InfoWindow({
 			maxWidth: 350,
-			content: '<h4>' + place.name() + '</h4><br><a href="' + place.url + '">Link to Foursquare</a>'
+			content: '<h4>' + place.name() + '</h4><div><p>' + place.address() + '</p></div>' + '<div><a href="' + place.url() + '">Website</a></div>'
 		});
 
 // adds click listener to the markers
