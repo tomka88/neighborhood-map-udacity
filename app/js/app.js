@@ -53,7 +53,7 @@ var Place = function(data) {
 	this.address = ko.observable('');
 	this.street = ko.observable('');
 	this.url = ko.observable('');
-	this.checkinCount = ko.observable('');
+	this.checkinsCount = ko.observable('');
 
 // creates lat-long variable for google maps markers
 	this.latLng = ko.computed(function(){
@@ -105,16 +105,25 @@ var ViewModel = function() {
 
 			var fsURL = 'https://api.foursquare.com/v2/venues/search?ll=' + place.lat() + ',' + place.lng() + '&intent=match&query=' + place.name() + '&client_id=' + client_id + '&client_secret=' + client_secret + '&v=' + version;
 
-			fetch(fsURL).then(function(response) {
-				if (response.status !== 200) {
-					alert('Houston we have a problem');
-					return;
-				}
+			var address, checkinsCount, url
 
-				response.json().then(function(place)) {
+			$.ajax({
+				dataType: json,
+				url: fsURL,
+				success: function(data) {
+					var results = data.response.venues[0];
 
+					place.address = results.location.address;
+					place.url = results.url;
+					place.checkinsCount = results.stats.checkinsCount;
+
+
+				},
+
+				error: function(data) {
+					$('#foursquare-API-error').html('<h4>Error. Please try to refresh</h4>');
 				}
-			})
+			});
 
 		}
 
@@ -128,7 +137,7 @@ var ViewModel = function() {
 
 		var infoWindow = new google.maps.InfoWindow({
 			maxWidth: 350,
-			content: '<h4>' + place.name() + '</h4><div><p>' + place.address() + '</p></div>' + '<div><a href="' + place.url() + '">Website</a></div>'
+			content: '<h4>' + place.name() + '</h4><div><p>' + place.checkinsCount() + '</p></div>' + '<div><a href="' + place.url() + '">Website</a></div>'
 		});
 
 // adds click listener to the markers
