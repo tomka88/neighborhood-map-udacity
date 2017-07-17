@@ -43,71 +43,163 @@ var burgerPlaces = [
 	}
 ];
 
-// function initMap() {
-// 	var berlin = {lat: 52.5200, lng: 13.4050};
-// 	var map;	
-// 	map = new google.maps.Map(document.getElementById('map'), {
-//       zoom: 12,
-//       center: berlin
-//     });
-
-//  //    var marker = new google.maps.Marker({
-//  //      position: berlin,
-//  //      map: map
-//  //    });
-// }
-
 var Place = function(data) {
 	this.name = ko.observable(data.name);
 	this.bestBurger = ko.observable(data.bestBurger);
 	this.fsq = ko.observable(data.foursquare_id);
 	this.lat = ko.observable(data.lat);
 	this.lng = ko.observable(data.lng);
+	this.markers = ko.observableArray([]);
+	this.address = ko.observable('');
+	this.street = ko.observable('');
+	this.url = ko.observable('');
+	this.checkinsCount = ko.observable('');
 
-// // creates foursquare link with ko.computed
-// 	this.fsqLink = ko.computed(function(){
-// 		var link = this.
-// 	})
+// creates lat-long variable for google maps markers
+	this.latLng = ko.computed(function(){
+		return "{lat: " + this.lat() + ", lng: " + this.lng() + "}";
+	},this);
 
-// // a location and a marker with lat-long variables and callingt the google maps API
-// 	this.marker = ko.computed
+// creates foursquare link with ko.computed
+	this.fsqLink = ko.computed(function(){
+		return 'https://api.foursquare.com/v2/venues/search?ll=' + this.lat() + ',' + this.lng() + '&intent=match&query=' + this.name() + '&client_id=4AU4CIDPEJFBQS3JXUTI20Q13I3NZWZPLR0Y3Y3OOOVCKLJ0&client_secret=NRQQY34A5SDFONZYEKKU5GWVZ1LFMR4MVMVQSLCGOIEPAKT2&v=20170702';
+	}, this);
 
-// 	this.marker = ko.computed
-// }
 
 };
-
-
 
 var ViewModel = function() {
 	var self = this;
 
-	this.placeList = ko.observableArray([]);
-
-	burgerPlaces.forEach(function(placeItem){
-		self.placeList.push( new Place(placeItem) );
+	
+// initiates google map
+	self.map = new google.maps.Map(document.getElementById('map'), {
+		center: {lat: 52.5200, lng: 13.4050},
+	    zoom: 12
 	});
 
-	this.currentPlace = ko.observable( this.placeList()[0] );
-
-	function initMap() {
-	var berlin = {lat: 52.5200, lng: 13.4050};
-	var map;	
-	map = new google.maps.Map(document.getElementById('map'), {
-      zoom: 12,
-      center: berlin
-    });
+// loops through the all places on the list
+	self.placeList = [];
+	burgerPlaces.forEach(function(place) {
+		self.placeList.push(new Place(place));
+	});
 
 
-	}
+// loops through all places, defines the marker position based on the lat-long coordinates
+// and populates the info window for each marker
 	
-	initMap();
+	self.placeList.forEach(function(place) {
+		var markerOptions = {
+			map: self.map,
+			position: new google.maps.LatLng(place.lat(), place.lng()),
+			animation: google.maps.Animation.DROP,
+			title: place.name()
+		};
+
+		place.marker = new google.maps.Marker(markerOptions);
+
+		function callFsq() {
+			var client_secret = 'NRQQY34A5SDFONZYEKKU5GWVZ1LFMR4MVMVQSLCGOIEPAKT2';
+			var client_id = '4AU4CIDPEJFBQS3JXUTI20Q13I3NZWZPLR0Y3Y3OOOVCKLJ0';
+			var version = '20170702';
+
+			var fsURL = 'https://api.foursquare.com/v2/venues/search?ll=' + place.lat() + ',' + place.lng()+ '&intent=match&query=' + place.name() + '&client_id=' + client_id + '&client_secret=' + client_secret + '&v=' + version;
+
+			var address, checkinsCount, url;
+			console.log('hello');
+
+			$.ajax({
+				dataType: 'json',
+				url: fsURL,
+				success: function(data) {
+					var results = data.response.venues[0];
+					console.log(data);
+					place.address(results.location.address);
+					place.url(results.url);
+					place.checkinsCount(results.stats.checkinsCount);
+
+					var infoWindow = new google.maps.InfoWindow({
+						maxWidth: 350,
+						content: '<h4>' + place.name() + 
+								'</h4><div><p>number of checkins:<strong> ' + place.checkinsCount() + '</strong></p></div>' 
+								+ '<div><p>Address:<strong> ' + place.address() + '</strong></p></div>'
+								+ '<div><a href="' + place.url() + '">Website</a></div>'
+					});
+					infoWindow.open(map, place.marker);
+	
+				},
+
+				error: function(data) {
+					console.log('an error occured');
+					alert('<h4>Error. Please try to refresh</h4>');
+					return
+				}
+			});
+
+		}
+
+		function bounce() {
+			if(place.marker.getAnimation() !== null) {
+				place.marker.setAnimation(null);
+			} else {
+				place.marker.setAnimation(google.maps.Animation.BOUNCE);
+			}
+		}
+
+
+		// adds click listener to the markers
+
+		google.maps.event.addListener(place.marker, 'click', function(){
+			bounce();
+			setTimeout(bounce, 150);
+			setTimeout(function() {
+
+				callFsq();
+			}, 300);
+				
+		});
+	});
+
+	self.visiblePlaces = ko.observableArray();
+
+	self.placeList.forEach(function(place){
+		self.visiblePlaces.push(place);
+	});
+
+// records the user input and passes it over to KO
+// and decides which markers are visible based on user input
+	
+	self.userInput = ko.observable('');
+
+	self.filterMarkers = function() {
+		var searchInput = self.userInput().toLowerCase();
+
+		self.visiblePlaces.removeAll();
+
+		self.placeList.forEach(function(place) {
+			place.marker.setVisible(false);
+
+			if (place.name().toLowerCase().indexOf(searchInput) !== -1) {
+				self.visiblePlaces.push(place);
+			}
+		});
+
+		self.visiblePlaces().forEach(function(place) {
+			place.marker.setVisible(true);
+		});
+	};
+
+	self.showInfoWindow = function(place){
+		google.maps.event.trigger(place.marker, 'click');
+	};
+
+
+
 }
 
 function callback() {
 	ko.applyBindings(new ViewModel());	
 }
-
 
 
 
