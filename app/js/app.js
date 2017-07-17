@@ -98,30 +98,38 @@ var ViewModel = function() {
 
 		place.marker = new google.maps.Marker(markerOptions);
 
-		function callFsq(place) {
+		function callFsq() {
 			var client_secret = 'NRQQY34A5SDFONZYEKKU5GWVZ1LFMR4MVMVQSLCGOIEPAKT2';
 			var client_id = '4AU4CIDPEJFBQS3JXUTI20Q13I3NZWZPLR0Y3Y3OOOVCKLJ0';
 			var version = '20170702';
 
-			var fsURL = 'https://api.foursquare.com/v2/venues/search?ll=' + place.lat() + ',' + place.lng() + '&intent=match&query=' + place.name() + '&client_id=' + client_id + '&client_secret=' + client_secret + '&v=' + version;
+			var fsURL = 'https://api.foursquare.com/v2/venues/search?ll=' + place.lat() + ',' + place.lng()+ '&intent=match&query=' + place.name() + '&client_id=' + client_id + '&client_secret=' + client_secret + '&v=' + version;
 
-			var address, checkinsCount, url
+			var address, checkinsCount, url;
+			console.log('hello');
 
 			$.ajax({
-				dataType: json,
+				dataType: 'json',
 				url: fsURL,
 				success: function(data) {
 					var results = data.response.venues[0];
+					console.log(data);
+					// place.address = results.location.address;
+					// place.url = results.url;
+					place.checkinsCount(results.stats.checkinsCount);
 
-					place.address = results.location.address;
-					place.url = results.url;
-					place.checkinsCount = results.stats.checkinsCount;
-
-
+					var infoWindow = new google.maps.InfoWindow({
+						maxWidth: 350,
+						content: '<h4>' + place.name() + '</h4><div><p>' + place.checkinsCount() + '</p></div>' + '<div><a href="' + place.url() + '">Website</a></div>'
+					});
+					infoWindow.open(map, place.marker);
+	
 				},
 
 				error: function(data) {
-					$('#foursquare-API-error').html('<h4>Error. Please try to refresh</h4>');
+					console.log('an error occured');
+					alert('<h4>Error. Please try to refresh</h4>');
+					return
 				}
 			});
 
@@ -135,18 +143,15 @@ var ViewModel = function() {
 			}
 		}
 
-		var infoWindow = new google.maps.InfoWindow({
-			maxWidth: 350,
-			content: '<h4>' + place.name() + '</h4><div><p>' + place.checkinsCount() + '</p></div>' + '<div><a href="' + place.url() + '">Website</a></div>'
-		});
 
-// adds click listener to the markers
+		// adds click listener to the markers
 
 		google.maps.event.addListener(place.marker, 'click', function(){
 			bounce();
 			setTimeout(bounce, 150);
 			setTimeout(function() {
-				infoWindow.open(map, place.marker);
+
+				callFsq();
 			}, 300);
 				
 		});
