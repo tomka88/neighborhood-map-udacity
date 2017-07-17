@@ -114,13 +114,16 @@ var ViewModel = function() {
 				success: function(data) {
 					var results = data.response.venues[0];
 					console.log(data);
-					// place.address = results.location.address;
-					// place.url = results.url;
+					place.address(results.location.address);
+					place.url(results.url);
 					place.checkinsCount(results.stats.checkinsCount);
 
 					var infoWindow = new google.maps.InfoWindow({
 						maxWidth: 350,
-						content: '<h4>' + place.name() + '</h4><div><p>' + place.checkinsCount() + '</p></div>' + '<div><a href="' + place.url() + '">Website</a></div>'
+						content: '<h4>' + place.name() + 
+								'</h4><div><p>number of checkins:<strong> ' + place.checkinsCount() + '</strong></p></div>' 
+								+ '<div><p>Address:<strong> ' + place.address() + '</strong></p></div>'
+								+ '<div><a href="' + place.url() + '">Website</a></div>'
 					});
 					infoWindow.open(map, place.marker);
 	
