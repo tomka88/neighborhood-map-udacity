@@ -4,7 +4,7 @@ var burgerPlaces = [
 		lat: 52.501083, 
 		lng: 13.442323,
 		bestBurger: 'hausmeister',
-		foursquare_id: '4ade123bf964a520d87221e3',
+		foursquare_id: '4ade123bf964a520d87221e3'
 	},
 	{
 		name: 'Shiso Burger',
@@ -69,7 +69,7 @@ var ViewModel = function() {
 
 	self.map = new google.maps.Map(document.getElementById('map'), {
 		center: {lat: 52.5200, lng: 13.4050},
-	    zoom: 12
+		zoom: 12
 	});
 
 
@@ -94,6 +94,10 @@ var ViewModel = function() {
 
 		place.marker = new google.maps.Marker(markerOptions);
 
+		var infoWindow = new google.maps.InfoWindow({
+			maxWidth: 350
+		});
+
 		function callFsq() {
 			var client_secret = 'NRQQY34A5SDFONZYEKKU5GWVZ1LFMR4MVMVQSLCGOIEPAKT2';
 			var client_id = '4AU4CIDPEJFBQS3JXUTI20Q13I3NZWZPLR0Y3Y3OOOVCKLJ0';
@@ -114,10 +118,7 @@ var ViewModel = function() {
 					place.url(results.url);
 					place.checkinsCount(results.stats.checkinsCount);
 
-					var infoWindow = new google.maps.InfoWindow({
-						maxWidth: 350,
-						content: '<h4>' + place.name() + '</h4><div><p>number of checkins:<strong> ' + place.checkinsCount() + '</strong></p></div>' + '<div><p>Address:<strong> ' + place.address() + '</strong></p></div>' + '<div><a href="' + place.url() + '">Website</a></div>'
-					});
+					infoWindow.setContent('<h4>' + place.name() + '</h4><div><p>number of checkins:<strong> ' + place.checkinsCount() + '</strong></p></div>' + '<div><p>Address:<strong> ' + place.address() + '</strong></p></div>' + '<div><a href="' + place.url() + '">Website</a></div>');
 					infoWindow.open(map, place.marker);
 	
 				},
@@ -125,7 +126,7 @@ var ViewModel = function() {
 				//error handling
 				complete: function() {
 					if(results.length === 0)
-						$('#foursquare-no-data').html('<h2>There is not foursquare data available for this Venue');
+						infoWindow.setContent('<h2>There is no foursquare data available for this Venue');
 				},
 
 				error: function(data) {
