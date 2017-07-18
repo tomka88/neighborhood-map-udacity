@@ -106,7 +106,6 @@ var ViewModel = function() {
 			var fsURL = 'https://api.foursquare.com/v2/venues/search?ll=' + place.lat() + ',' + place.lng()+ '&intent=match&query=' + place.name() + '&client_id=' + client_id + '&client_secret=' + client_secret + '&v=' + version;
 
 			var address, checkinsCount, url;
-			console.log('hello');
 
 			$.ajax({
 				dataType: 'json',
@@ -126,7 +125,7 @@ var ViewModel = function() {
 				//error handling
 				complete: function() {
 					if(results.length === 0)
-						infoWindow.setContent('<h2>There is no foursquare data available for this Venue');
+						infoWindow.setContent('<h2>There is no foursquare data available for this Venue</h2>');
 				},
 
 				error: function(data) {
@@ -153,6 +152,7 @@ var ViewModel = function() {
 			bounce();
 			setTimeout(bounce, 150);
 			setTimeout(function() {
+				console.log('hello World');
 				callFsq();
 			}, 300);
 				
