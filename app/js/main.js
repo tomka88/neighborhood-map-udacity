@@ -51,7 +51,6 @@ var Place = function(data) {
 	this.lng = ko.observable(data.lng);
 	this.markers = ko.observableArray([]);
 	this.address = ko.observable('');
-	this.street = ko.observable('');
 	this.url = ko.observable('');
 	this.checkinsCount = ko.observable('');
 
@@ -60,12 +59,6 @@ var Place = function(data) {
 		return "{lat: " + this.lat() + ", lng: " + this.lng() + "}";
 	},this);
 
-// creates foursquare link with ko.computed
-	this.fsqLink = ko.computed(function(){
-		return 'https://api.foursquare.com/v2/venues/search?ll=' + this.lat() + ',' + this.lng() + '&intent=match&query=' + this.name() + '&client_id=4AU4CIDPEJFBQS3JXUTI20Q13I3NZWZPLR0Y3Y3OOOVCKLJ0&client_secret=NRQQY34A5SDFONZYEKKU5GWVZ1LFMR4MVMVQSLCGOIEPAKT2&v=20170702';
-	}, this);
-
-
 };
 
 var ViewModel = function() {
@@ -73,10 +66,13 @@ var ViewModel = function() {
 
 	
 // initiates google map
+
 	self.map = new google.maps.Map(document.getElementById('map'), {
 		center: {lat: 52.5200, lng: 13.4050},
 	    zoom: 12
 	});
+
+
 
 // loops through the all places on the list
 	self.placeList = [];
@@ -113,7 +109,7 @@ var ViewModel = function() {
 				url: fsURL,
 				success: function(data) {
 					var results = data.response.venues[0];
-					console.log(data);
+					console.log(data); //just checks the call
 					place.address(results.location.address);
 					place.url(results.url);
 					place.checkinsCount(results.stats.checkinsCount);
@@ -129,10 +125,16 @@ var ViewModel = function() {
 	
 				},
 
+				//error handling
+				complete: function() {
+					if(results.length === 0)
+						$('#foursquare-no-data').html('<h2>There is not foursquare data available for this Venue');
+				},
+
 				error: function(data) {
-					console.log('an error occured');
+					console.log('an error occured');//for debugging
 					alert('<h4>Error. Please try to refresh</h4>');
-					return
+					return;
 				}
 			});
 
@@ -153,7 +155,6 @@ var ViewModel = function() {
 			bounce();
 			setTimeout(bounce, 150);
 			setTimeout(function() {
-
 				callFsq();
 			}, 300);
 				
@@ -193,8 +194,10 @@ var ViewModel = function() {
 		google.maps.event.trigger(place.marker, 'click');
 	};
 
+};
 
-
+function googleError() {
+	alert("Cannot load Google Maps. Check internet connection.");
 }
 
 function callback() {

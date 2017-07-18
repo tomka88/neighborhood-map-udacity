@@ -1,14 +1,33 @@
 # neighborhood-map-udacity
-project 5 for Udacity FEND course
+
+### Overview
+
+This project my 5th project for the Front End Nanondegree course at Udacity. The project shows a map and a list of popular burger places in Berlin. The user can search for the particular burger places he/she is interested in. By clicking on the list items the user can see further information about the burger joints.
 
 
-References:
+### Dependencies and Libraries:
+- Bootstrap
+- JQuery
+- Knockout Js
+
+Please look at the [package.json](package.json) file for more details
+
+### APIs used
+- Google Maps API
+- Foursquare API
+
+
+###References:
 
 http://knockoutjs.com/documentation/introduction.html
 
 https://codepen.io/prather-mcs/pen/KpjbNN?editors=0010
 
 https://codepen.io/SittingFox/pen/NGwZvm?editors=1010
+
+https://stackoverflow.com/questions/19268196/wiring-an-ajax-call-in-knockout-js
+
+https://stackoverflow.com/questions/38746416/ajax-data-binding-using-knockout-js
 
 https://github.com/Pooja0131/FEND-Neighbourhood-Project5a
 

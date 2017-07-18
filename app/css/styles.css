@@ -10,3 +10,8 @@
 
 li {
   list-style-type: none; }
+
+.logo-centered {
+  float: none;
+  margin: 0 auto;
+  margin-top: 2%; }
