@@ -246,10 +246,7 @@ var ViewModel = function() {
 
 					var infoWindow = new google.maps.InfoWindow({
 						maxWidth: 350,
-						content: '<h4>' + place.name() + 
-								'</h4><div><p>number of checkins:<strong> ' + place.checkinsCount() + '</strong></p></div>' 
-								+ '<div><p>Address:<strong> ' + place.address() + '</strong></p></div>'
-								+ '<div><a href="' + place.url() + '">Website</a></div>'
+						content: '<h4>' + place.name() + '</h4><div><p>number of checkins:<strong> ' + place.checkinsCount() + '</strong></p></div>' + '<div><p>Address:<strong> ' + place.address() + '</strong></p></div>' + '<div><a href="' + place.url() + '">Website</a></div>'
 					});
 					infoWindow.open(map, place.marker);
 	
