@@ -17,7 +17,9 @@ Please look at the [package.json](package.json) file for more details
 - Foursquare API
 
 
-###References:
+### References:
+
+https://discussions.udacity.com/t/handling-google-maps-in-async-and-fallback/34282
 
 http://knockoutjs.com/documentation/introduction.html
 
