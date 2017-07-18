@@ -16,6 +16,23 @@ Please look at the [package.json](package.json) file for more details
 - Google Maps API
 - Foursquare API
 
+### Building the Project
+
+The project is using `node modules`, `gulp` and `bower`
+1. Install the latest Node version through terminal:
+	Click [here](https://nodejs.org/en/download/package-manager/#osx) for more info
+	`brew install node`
+
+2. Pull all the dependendcies from the package.json by running:
+	`npm install`
+
+3. Gulp is used for minifying the JS files in the `dist` folder and creating the CSS file from SASS. Run gulp in the terminal:
+	`gulp`
+
+4. Gulp creates the a minified js file in the [dist](../dist/all.min.js) folder for the project.
+
+5. Open [index.html](app/index.html) in your browser.
+
 
 ### References:
 

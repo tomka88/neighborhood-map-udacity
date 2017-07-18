@@ -2,18 +2,18 @@
 <html lang="en">
 	<head>
 	    <meta charset="UTF-8">
-	    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+	    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=yes">
 	    <title>neighborhood map</title>
 	    <link rel="stylesheet" href="../app/css/styles.css">
 	    <link rel="stylesheet" href="../bower_components/bootstrap/dist/css/bootstrap.css">
 	</head>
 	<body>
 		<div class="container-fluid">
-			<div class="page-header">
+			<header class="page-header">
 			  <h1>Welcome to the Berlin Burger Guide</h1>
 			  <h4> we collect the best burger places in the city</h4>
-			</div>
-			<div class="row">
+			</header>
+			<section class="row">
 				<div class="col-xs-12 col-md-12 search">
 					<div class="input-group">
 					  <input type="text" class="form-control" placeholder="Search for..." data-bind="textInput: userInput, event: {keyup: filterMarkers}">
@@ -22,9 +22,9 @@
 					  </span>
 					</div><!-- /input-group -->
 				</div><!-- /.col-lg-6 -->
-			</div>
+			</section>
 
-			<div class="row">
+			<main class="row">
 				<div class="col-xs-12 col-md-3 place-list">
 					<ul data-bind="foreach: visiblePlaces">
 						<li data-bind="text: name, click: $parent.showInfoWindow"></li>
@@ -32,15 +32,16 @@
 				</div>
 				<div class="col-xs-12 col-md-9" id="map">
 				</div>
-			</div>
-			<div class="row">
+			</main>
+
+			<footer class="row">
 				<div class="col-xs-12 col-md-12">
 					<img src="img/fsq_logo.png" class="img-responsive logo-centered" alt="powered by Foursquare logo">
 				</div>
-			</div>
+			</footer>
 		</div>
 
-		<script type="text/javascript" src="../dist/all.min.js"></script>
+		<script src="../dist/all.min.js"></script>
 	    <script async defer
 	    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCE3LE2A1vrxMOApcAr_bXx6DoxWsaAd7s&callback=callback" onerror="googleError()">
 	    </script>
