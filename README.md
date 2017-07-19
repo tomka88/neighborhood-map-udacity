@@ -23,15 +23,19 @@ The project is using `node modules`, `gulp` and `bower`
 	Click [here](https://nodejs.org/en/download/package-manager/#osx) for more info
 	`brew install node`
 
-2. Pull all the dependendcies from the package.json by running:
+2. Install bower with: `npm install -g bower` command.
+
+3. Run `bower install bootstrap` in the terminal. This will pull all Bootstrap related files and will create the bower_components folder.
+
+4. Pull all the dependendcies from the package.json by running:
 	`npm install`
 
-3. Gulp is used for minifying the JS files in the `dist` folder and creating the CSS file from SASS. Run gulp in the terminal:
+5. Gulp is used for minifying the JS files in the `dist` folder and creating the CSS file from SASS. Run gulp in the terminal:
 	`gulp`
 
-4. Gulp creates the a minified js file in the [dist](dist/all.min.js) folder for the project.
+6. Gulp creates the a minified js file in the [dist](dist/all.min.js) folder for the project.
 
-5. Open [index.html](app/index.html) in your browser.
+7. Open [index.html](app/index.html) in your browser.
 
 
 ### References:

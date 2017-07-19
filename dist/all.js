@@ -174,11 +174,11 @@ var burgerPlaces = [
 ];
 
 var Place = function(data) {
-	this.name = ko.observable(data.name);
-	this.bestBurger = ko.observable(data.bestBurger);
-	this.fsq = ko.observable(data.foursquare_id);
-	this.lat = ko.observable(data.lat);
-	this.lng = ko.observable(data.lng);
+	this.name = data.name;
+	this.bestBurger = data.bestBurger;
+	this.fsq = data.foursquare_id;
+	this.lat = data.lat;
+	this.lng = data.lng;
 	this.markers = ko.observableArray([]);
 	this.address = ko.observable('');
 	this.url = ko.observable('');
@@ -186,7 +186,7 @@ var Place = function(data) {
 
 // creates lat-long variable for google maps markers
 	this.latLng = ko.computed(function(){
-		return "{lat: " + this.lat() + ", lng: " + this.lng() + "}";
+		return "{lat: " + this.lat + ", lng: " + this.lng + "}";
 	},this);
 
 };
@@ -204,36 +204,35 @@ var ViewModel = function() {
 
 
 
-// loops through the all places on the list
+	// loops through the all places on the list
 	self.placeList = [];
 	burgerPlaces.forEach(function(place) {
 		self.placeList.push(new Place(place));
 	});
 
+	var infoWindow = new google.maps.InfoWindow({
+	maxWidth: 350
+	});
 
-// loops through all places, defines the marker position based on the lat-long coordinates
-// and populates the info window for each marker
+	// loops through all places, defines the marker position based on the lat-long coordinates
+	// and populates the info window for each marker
 	
 	self.placeList.forEach(function(place) {
 		var markerOptions = {
 			map: self.map,
-			position: new google.maps.LatLng(place.lat(), place.lng()),
+			position: new google.maps.LatLng(place.lat, place.lng),
 			animation: google.maps.Animation.DROP,
-			title: place.name()
+			title: place.name
 		};
 
 		place.marker = new google.maps.Marker(markerOptions);
-
-		var infoWindow = new google.maps.InfoWindow({
-			maxWidth: 350
-		});
 
 		function callFsq() {
 			var client_secret = 'NRQQY34A5SDFONZYEKKU5GWVZ1LFMR4MVMVQSLCGOIEPAKT2';
 			var client_id = '4AU4CIDPEJFBQS3JXUTI20Q13I3NZWZPLR0Y3Y3OOOVCKLJ0';
 			var version = '20170702';
 
-			var fsURL = 'https://api.foursquare.com/v2/venues/search?ll=' + place.lat() + ',' + place.lng()+ '&intent=match&query=' + place.name() + '&client_id=' + client_id + '&client_secret=' + client_secret + '&v=' + version;
+			var fsURL = 'https://api.foursquare.com/v2/venues/search?ll=' + place.lat + ',' + place.lng + '&intent=match&query=' + place.name + '&client_id=' + client_id + '&client_secret=' + client_secret + '&v=' + version;
 
 			var address, checkinsCount, url;
 
@@ -251,7 +250,7 @@ var ViewModel = function() {
 						place.url(results.url);
 						place.checkinsCount(results.stats.checkinsCount);
 
-						infoWindow.setContent('<h4>' + place.name() + '</h4><div><p>number of checkins:<strong> ' + place.checkinsCount() + '</strong></p></div>' + '<div><p>Address:<strong> ' + place.address() + '</strong></p></div>' + '<div><a href="' + place.url() + '">Website</a></div>');
+						infoWindow.setContent('<h4>' + place.name + '</h4><div><p>number of checkins:<strong> ' + place.checkinsCount() + '</strong></p></div>' + '<div><p>Address:<strong> ' + place.address() + '</strong></p></div>' + '<div><a href="' + place.url() + '">Website</a></div>');
 						infoWindow.open(map, place.marker);
 					}else {
 						infoWindow.setContent('<h2>There is no foursquare data available for this Venue</h2>');
@@ -308,7 +307,7 @@ var ViewModel = function() {
 		self.placeList.forEach(function(place) {
 			place.marker.setVisible(false);
 
-			if (place.name().toLowerCase().indexOf(searchInput) !== -1) {
+			if (place.name.toLowerCase().indexOf(searchInput) !== -1) {
 				self.visiblePlaces.push(place);
 			}
 		});
