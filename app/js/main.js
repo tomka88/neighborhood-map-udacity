@@ -124,8 +124,9 @@ var ViewModel = function() {
 
 				//error handling
 				complete: function() {
-					if(results.length === 0)
+					if(results.length === 0) {
 						infoWindow.setContent('<h2>There is no foursquare data available for this Venue</h2>');
+					}
 				},
 
 				error: function(data) {
