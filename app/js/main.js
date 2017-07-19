@@ -111,27 +111,27 @@ var ViewModel = function() {
 				dataType: 'json',
 				url: fsURL,
 				success: function(data) {
-					var results = data.response.venues[0];
-					console.log(data); //just checks the call
-					place.address(results.location.address);
-					place.url(results.url);
-					place.checkinsCount(results.stats.checkinsCount);
+					console.log("success", data); //just checks the call
 
-					infoWindow.setContent('<h4>' + place.name() + '</h4><div><p>number of checkins:<strong> ' + place.checkinsCount() + '</strong></p></div>' + '<div><p>Address:<strong> ' + place.address() + '</strong></p></div>' + '<div><a href="' + place.url() + '">Website</a></div>');
-					infoWindow.open(map, place.marker);
-	
-				},
+					// check if data.respomse.venuse.length > 0
+					if (data.response.venues && data.response.venues.length > 0) {
+						var results = data.response.venues[0];
 
-				//error handling
-				complete: function() {
-					if(results.length === 0) {
+						place.address(results.location.address);
+						place.url(results.url);
+						place.checkinsCount(results.stats.checkinsCount);
+
+						infoWindow.setContent('<h4>' + place.name() + '</h4><div><p>number of checkins:<strong> ' + place.checkinsCount() + '</strong></p></div>' + '<div><p>Address:<strong> ' + place.address() + '</strong></p></div>' + '<div><a href="' + place.url() + '">Website</a></div>');
+						infoWindow.open(map, place.marker);
+					}else {
 						infoWindow.setContent('<h2>There is no foursquare data available for this Venue</h2>');
+						infoWindow.open(map, place.marker);
 					}
 				},
 
 				error: function(data) {
 					console.log('an error occured');//for debugging
-					alert('<h4>Error. Please try to refresh</h4>');
+					alert('Error. Please try to refresh and check your internet connection!');
 					return;
 				}
 			});
