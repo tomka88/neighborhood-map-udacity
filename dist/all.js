@@ -283,7 +283,6 @@ var ViewModel = function() {
 			bounce();
 			setTimeout(bounce, 150);
 			setTimeout(function() {
-				console.log('hello World');
 				callFsq();
 			}, 300);
 				
